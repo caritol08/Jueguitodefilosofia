@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz: La Escuela de Atenas</title>
+  <style>
+    body {
+      font-family: 'Georgia', serif;
+      background: #f8f3e7 url('https://upload.wikimedia.org/wikipedia/commons/9/94/Raffaello_Scuola_di_Atene.jpg') no-repeat center top / cover;
+      margin: 0;
+      padding: 0;
+      color: #3b2f2f;
+    }
+
+    .overlay {
+      background-color: rgba(255, 248, 220, 0.9);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .quiz-container {
+      background: #fffaf0;
+      border: 2px solid #b8860b;
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      padding: 20px 30px;
+      max-width: 700px;
+      text-align: center;
+    }
+
+    h1 {
+      font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
+      color: #6b4226;
+      text-shadow: 1px 1px 0 #f0e0b6;
+    }
+
+    img {
+      max-width: 100%;
+      border-radius: 10px;
+      margin: 15px 0;
+      border: 2px solid #b8860b;
+    }
+
+    .question {
+      font-size: 1.2em;
+      margin-bottom: 15px;
+    }
+
+    .answers button {
+      background: #f0e0b6;
+      border: 2px solid #b8860b;
+      border-radius: 8px;
+      padding: 10px;
+      margin: 5px;
+      width: 90%;
+      font-size: 1em;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .answers button:hover {
+      background: #e6d093;
+    }
+
+    .correct {
+      background-color: #c4e7b5 !important;
+      border-color: #3b8a3e;
+    }
+
+    .incorrect {
+      background-color: #f5a6a6 !important;
+      border-color: #a33c3c;
+    }
+
+    #next-btn {
+      background: #b8860b;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 20px;
+      margin-top: 15px;
+      font-size: 1em;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    #next-btn:hover {
+      background: #d4af37;
+    }
+
+    #score {
+      font-size: 1.3em;
+      font-weight: bold;
+      color: #6b4226;
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay">
+    <div class="quiz-container">
+      <h1>Quiz: La Escuela de Atenas</h1>
+      <img id="question-image" src="" alt="Imagen relacionada">
+      <div class="question" id="question"></div>
+      <div class="answers" id="answer-buttons"></div>
+      <button id="next-btn">Siguiente</button>
+      <div id="score" style="display:none;"></div>
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      {question:"¿Quién pintó 'La Escuela de Atenas'?",image:"https://upload.wikimedia.org/wikipedia/commons/9/94/Raffaello_Scuola_di_Atene.jpg",answers:[{text:"Leonardo da Vinci",correct:false},{text:"Rafael Sanzio",correct:true},{text:"Miguel Ángel",correct:false},{text:"Donatello",correct:false}]},
+      {question:"¿En qué edificio se encuentra 'La Escuela de Atenas'?",image:"https://upload.wikimedia.org/wikipedia/commons/9/94/Raffaello_Scuola_di_Atene.jpg",answers:[{text:"El Museo del Prado",correct:false},{text:"La Capilla Sixtina",correct:false},{text:"Las Estancias del Vaticano",correct:true},{text:"El Louvre",correct:false}]},
+      {question:"¿Qué representa la obra 'La Escuela de Atenas'?",image:"https://upload.wikimedia.org/wikipedia/commons/d/d8/Raffaello_Scuola_di_Atene_platone_aristotele.jpg",answers:[{text:"La sabiduría y el conocimiento filosófico",correct:true},{text:"La historia del cristianismo",correct:false},{text:"La guerra de Troya",correct:false},{text:"El juicio final",correct:false}]},
+      {question:"¿Qué filósofos aparecen en el centro de la pintura?",image:"https://upload.wikimedia.org/wikipedia/commons/d/d8/Raffaello_Scuola_di_Atene_platone_aristotele.jpg",answers:[{text:"Sócrates y Pitágoras",correct:false},{text:"Platón y Aristóteles",correct:true},{text:"Epicuro y Heráclito",correct:false},{text:"Zenón y Diógenes",correct:false}]},
+      {question:"¿En qué período artístico fue pintada?",image:"https://upload.wikimedia.org/wikipedia/commons/9/94/Raffaello_Scuola_di_Atene.jpg",answers:[{text:"Renacimiento",correct:true},{text:"Barroco",correct:false},{text:"Gótico",correct:false},{text:"Romántico",correct:false}]},
+      {question:"¿Qué técnica utilizó Rafael para realizar esta obra?",image:"https://upload.wikimedia.org/wikipedia/commons/9/94/Raffaello_Scuola_di_Atene.jpg",answers:[{text:"Fresco",correct:true},{text:"Óleo sobre lienzo",correct:false},{text:"Acuarela",correct:false},{text:"Tempera sobre madera",correct:false}]},
+      {question:"¿Qué simboliza el gesto de Platón señalando hacia arriba?",image:"https://upload.wikimedia.org/wikipedia/commons/d/d8/Raffaello_Scuola_di_Atene_platone_aristotele.jpg",answers:[{text:"El mundo terrenal",correct:false},{text:"El idealismo y las ideas eternas",correct:true},{text:"El materialismo",correct:false},{text:"El arte divino",correct:false}]},
+      {question:"¿Qué simboliza el gesto de Aristóteles con la mano extendida hacia la tierra?",image:"https://upload.wikimedia.org/wikipedia/commons/d/d8/Raffaello_Scuola_di_Atene_platone_aristotele.jpg",answers:[{text:"El empirismo y la observación",correct:true},{text:"El idealismo",correct:false},{text:"La religión",correct:false},{text:"El arte",correct:false}]},
+      {question:"¿En qué año fue pintada aproximadamente?",image:"https://upload.wikimedia.org/wikipedia/commons/9/94/Raffaello_Scuola_di_Atene.jpg",answers:[{text:"1509-1511",correct:true},{text:"1492-1494",correct:false},{text:"1520-1525",correct:false},{text:"1480-1485",correct:false}]},
+      {question:"¿Qué personaje representa Rafael dentro de la obra?",image:"https://upload.wikimedia.org/wikipedia/commons/b/bb/Raphael_School_of_Athens_Raphael.jpg",answers:[{text:"Un alumno de Aristóteles",correct:false},{text:"El propio pintor observando la escena",correct:true},{text:"Sócrates",correct:false},{text:"Pitágoras",correct:false}]},
+      {question:"¿Qué representa el espacio arquitectónico en la pintura?",image:"https://upload.wikimedia.org/wikipedia/commons/9/94/Raffaello_Scuola_di_Atene.jpg",answers:[{text:"La armonía y el orden del pensamiento clásico",correct:true},{text:"Un templo cristiano",correct:false},{text:"El desorden de las ideas humanas",correct:false},{text:"El cielo y el infierno",correct:false}]},
+      {question:"¿Qué corriente filosófica está representada en el personaje de Diógenes?",image:"https://upload.wikimedia.org/wikipedia/commons/2/2c/Raphael_School_of_Athens_Diogenes.jpg",answers:[{text:"Cinismo",correct:true},{text:"Estoicismo",correct:false},{text:"Epicureísmo",correct:false},{text:"Platonismo",correct:false}]},
+      {question:"¿Qué figura se cree que representa a Miguel Ángel?",image:"https://upload.wikimedia.org/wikipedia/commons/9/94/Raffaello_Scuola_di_Atene.jpg",answers:[{text:"Heráclito",correct:true},{text:"Pitágoras",correct:false},{text:"Zenón",correct:false},{text:"Sócrates",correct:false}]},
+      {question:"¿Qué elemento destaca la perspectiva en la pintura?",image:"https://upload.wikimedia.org/wikipedia/commons/9/94/Raffaello_Scuola_di_Atene.jpg",answers:[{text:"El punto de fuga en el centro entre Platón y Aristóteles",correct:true},{text:"Las escaleras laterales",correct:false},{text:"El fondo oscuro",correct:false},{text:"El techo abovedado",correct:false}]},
+      {question:"¿Qué tema general une a todos los personajes de la pintura?",image:"https://upload.wikimedia.org/wikipedia/commons/9/94/Raffaello_Scuola_di_Atene.jpg",answers:[{text:"La filosofía y la búsqueda del conocimiento",correct:true},{text:"La religión cristiana",correct:false},{text:"La guerra y la política",correct:false},{text:"El arte renacentista",correct:false}]}
+    ];
+
+    const questionElement = document.getElementById("question");
+    const answerButtons = document.getElementById("answer-buttons");
+    const nextButton = document.getElementById("next-btn");
+    const imageElement = document.getElementById("question-image");
+    const scoreContainer = document.getElementById("score");
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+
+    function startQuiz() {
+      currentQuestionIndex = 0;
+      score = 0;
+      nextButton.innerHTML = "Siguiente";
+      scoreContainer.style.display = "none";
+      showQuestion();
+    }
+
+    function showQuestion() {
+      resetState();
+      let currentQuestion = questions[currentQuestionIndex];
+      questionElement.innerHTML = currentQuestion.question;
+      imageElement.src = currentQuestion.image;
+
+      currentQuestion.answers.forEach(answer => {
+        const button = document.createElement("button");
+        button.innerHTML = answer.text;
+        button.addEventListener("click", () => selectAnswer(button, answer.correct));
+        answerButtons.appendChild(button);
+      });
+    }
+
+    function resetState() {
+      nextButton.style.display = "none";
+      while (answerButtons.firstChild) answerButtons.removeChild(answerButtons.firstChild);
+    }
+
+    function selectAnswer(button, correct) {
+      const buttons = answerButtons.querySelectorAll("button");
+      buttons.forEach(btn => btn.disabled = true);
+      if (correct) {button.classList.add("correct"); score++;} 
+      else {button.classList.add("incorrect");}
+      nextButton.style.display = "block";
+    }
+
+    nextButton.addEventListener("click", () => {
+      currentQuestionIndex++;
+      if (currentQuestionIndex < questions.length) showQuestion();
+      else showScore();
+    });
+
+    function showScore() {
+      resetState();
+      questionElement.innerHTML = "🎉 ¡Has completado el quiz!";
+      imageElement.src = "https://upload.wikimedia.org/wikipedia/commons/9/94/Raffaello_Scuola_di_Atene.jpg";
+      scoreContainer.style.display = "block";
+      scoreContainer.innerHTML = `Tu puntaje final es: ${score} de ${questions.length}`;
+      nextButton.innerHTML = "Reiniciar";
+      nextButton.style.display = "block";
+      nextButton.addEventListener("click", startQuiz, { once: true });
+    }
+
+    startQuiz();
+  </script>
+</body>
+</html>
